@@ -4,9 +4,6 @@ Module: database/table_manager.py
 This module provides a class `Table` that manages PostgreSQL database operations
 for a task and notes manager application. It handles table creation and basic
 CRUD operations for users, tasks, and notes.
-
-Author: [Your Name]
-Created: 2025-05-01
 """
 
 import psycopg2
