@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title>Task Note Manager</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .welcome {
+            font-size: 36px;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .form-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        form div {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+        }
+
+        .flash {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .flash-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .register-form {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        function toggleRegister() {
+            const form = document.getElementById("register-form");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome">
+            Task Note Manager
+        </div>
+
+        <div class="form-wrapper">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                {{ login_form.hidden_tag() }}
+                <div>
+                    {{ login_form.email.label }}
+                    {{ login_form.email(size=32) }}
+                </div>
+                <div>
+                    {{ login_form.password.label }}
+                    {{ login_form.password(size=32) }}
+                </div>
+                <div>
+                    {{ login_form.submit() }}
+                </div>
+            </form>
+
+            <div class="register-link">
+                Nie masz konta? <a href="#" onclick="toggleRegister()">Zarejestruj się</a>
+            </div>
+
+            <form id="register-form" class="register-form" method="POST" action="{{ url_for('auth.register') }}">
+                {{ register_form.hidden_tag() }}
+                <div>
+                    {{ register_form.username.label }}
+                    {{ register_form.username(size=32) }}
+                </div>
+                <div>
+                    {{ register_form.email.label }}
+                    {{ register_form.email(size=32) }}
+                </div>
+                <div>
+                    {{ register_form.password.label }}
+                    {{ register_form.password(size=32) }}
+                </div>
+                <div>
+                    {{ register_form.confirm_password.label }}
+                    {{ register_form.confirm_password(size=32) }}
+                </div>
+                <div>
+                    {{ register_form.submit() }}
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

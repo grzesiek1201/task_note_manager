@@ -2,7 +2,6 @@
 config.py
 """
 
-
 import os
 
 
@@ -11,7 +10,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-class DevelopmentConfig:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = 'your-secret-key'
+class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DATABASE_URL',
+        'postgresql://postgres:postgres@localhost:5432/Users'
+    )
