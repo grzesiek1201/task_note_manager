@@ -42,7 +42,6 @@ tests/
 ├── test_tasks.py
 └── ...
 config.py # configuration classes (DevelopmentConfig, TestingConfig, ProductionConfig)
-requirements.txt # dependencies
 
 
 ## Installation
