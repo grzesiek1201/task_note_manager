@@ -26,22 +26,22 @@ The app uses SQLAlchemy for ORM, Flask-Migrate for database migrations, and Flas
 
 ## Project Structure
 
+```text
 app/
-├── init.py # app factory, extensions initialization, blueprint registration
+├── __init__.py
 ├── models/
-│ └── models.py # SQLAlchemy models (User, Task, Note, Category)
+│   └── models.py
 ├── routes/
-│ ├── auth.py # authentication routes
-│ ├── tasks.py # task management routes
-│ ├── notes.py # notes management routes
-│ └── categories.py # categories management routes
-├── templates/ # Jinja2 HTML templates
-└── static/ # static files (CSS, JS, images)
-tests/
-├── test_auth.py
-├── test_tasks.py
-└── ...
-config.py # configuration classes (DevelopmentConfig, TestingConfig, ProductionConfig)
+│   ├── auth.py
+│   ├── tasks.py
+│   ├── notes.py
+│   └── categories.py
+templates/
+static/
+config.py
+requirements.txt
+README.md
+
 
 
 ## Installation
