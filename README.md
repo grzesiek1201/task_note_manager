@@ -24,6 +24,19 @@ The app uses SQLAlchemy for ORM, Flask-Migrate for database migrations, and Flas
 - PostgreSQL (production/test DB)  
 - pytest for testing  
 
+
+
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/grzesiek1201/task_note_manager.git
+   cd task_note_manager
+
+License
+- MIT License
+
 ## Project Structure
 
 ```text
@@ -42,14 +55,3 @@ config.py
 requirements.txt
 README.md
 
-
-
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/grzesiek1201/task_note_manager.git
-   cd task_note_manager
-
-License
-- MIT License
