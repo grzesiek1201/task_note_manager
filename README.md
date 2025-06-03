@@ -51,31 +51,6 @@ requirements.txt # dependencies
    ```bash
    git clone https://github.com/grzesiek1201/task_note_manager.git
    cd task_note_manager
-(Optional) Create and activate a Python virtual environment:
-
-python -m venv venv
-source venv/bin/activate   # Linux/macOS
-venv\Scripts\activate      # Windows
-Install dependencies:
-
-pip install -r requirements.txt
-Set up PostgreSQL database and update connection URI in config.py.
-
-Initialize the database and run migrations:
-
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
-Run the application:
-
-flask run
-Running Tests
-Run all tests with pytest:
-
-pytest tests/
-Configuration
-Configurations are handled in config.py. By default, the app uses the DevelopmentConfig.
-Override environment variables or modify the config file to adjust settings (database URI, debug mode, etc.).
 
 License
 - MIT License
