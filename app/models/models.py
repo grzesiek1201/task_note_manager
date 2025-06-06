@@ -21,19 +21,27 @@ from flask_login import UserMixin
 
 
 class User(db.Model, UserMixin):
-    """Represents an authenticated user of the system."""
+    __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
 
-    notes = db.relationship("Note", backref="user", lazy="dynamic")
-    tasks = db.relationship("Task", backref="user", lazy="dynamic")
-    categories = db.relationship("Category", backref="user", lazy="dynamic")
+    notes = db.relationship(
+        "Note", backref="user", lazy="dynamic", cascade="all, delete-orphan"
+    )
+    tasks = db.relationship(
+        "Task", backref="user", lazy="dynamic", cascade="all, delete-orphan"
+    )
+    categories = db.relationship(
+        "Category", backref="user", lazy="dynamic", cascade="all, delete-orphan"
+    )
 
     def set_password(self, password: str) -> None:
         """Hash and set user's password."""
+        if len(password) < 8:
+            raise ValueError("Hasło musi mieć co najmniej 8 znaków.")
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password: str) -> bool:
@@ -43,44 +51,85 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User {self.username}>"
 
+    def as_dict(self) -> dict:
+        """Return user data as dict (excluding sensitive fields)."""
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+        }
+
 
 class Category(db.Model):
-    """Represents a category that can group tasks and notes."""
+    __tablename__ = "category"
+    __table_args__ = (
+        db.UniqueConstraint("name", "user_id", name="_user_category_uc"),
+        db.Index("idx_category_user", "user_id"),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
-    notes = db.relationship("Note", backref="category_obj", lazy="dynamic")
-    tasks = db.relationship("Task", backref="category_obj", lazy="dynamic")
+    notes = db.relationship(
+        "Note", backref="category_obj", lazy="dynamic", cascade="all, delete-orphan"
+    )
+    tasks = db.relationship(
+        "Task", backref="category_obj", lazy="dynamic", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<Category {self.name}>"
 
+    def as_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "user_id": self.user_id,
+        }
+
 
 class Note(db.Model):
-    """Represents a textual note owned by a user, optionally categorized."""
+    __tablename__ = "note"
+    __table_args__ = (
+        db.Index("idx_note_user", "user_id"),
+        db.Index("idx_note_category", "category_id"),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
         return f"<Note {self.title}>"
 
+    def as_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "content": self.content,
+            "category_id": self.category_id,
+            "user_id": self.user_id,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
 
 class Task(db.Model):
-    """Represents a task that a user wants to track or complete."""
+    __tablename__ = "task"
+    __table_args__ = (
+        db.Index("idx_task_user", "user_id"),
+        db.Index("idx_task_category", "category_id"),
+        db.Index("idx_task_completed", "completed"),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     due_date = db.Column(db.Date)
     completed = db.Column(db.Boolean, default=False)
@@ -89,14 +138,26 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def mark_done(self) -> None:
-        """Mark the task as completed."""
+        """Mark the task as completed. Remember to commit the session manually."""
         self.completed = True
         self.updated_at = datetime.utcnow()
 
     def __repr__(self):
-        return f"<Task {self.title} {'[done]' if self.completed else ''}>"
+        status = "[done]" if self.completed else ""
+        return f"<Task {self.title} {status}>"
+
+    def as_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "due_date": self.due_date.isoformat() if self.due_date else None,
+            "completed": self.completed,
+            "category_id": self.category_id,
+            "user_id": self.user_id,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }

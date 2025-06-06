@@ -8,7 +8,7 @@ Only use for development or testing purposes.
 
 from flask import Flask
 from app.extensions import db
-from app.models import models
+from app.models.models import User  # fixed import to absolute path
 
 
 def create_app(config_object=None) -> Flask:
@@ -28,7 +28,12 @@ def create_app(config_object=None) -> Flask:
     })
 
     if config_object:
-        app.config.from_object(config_object) if isinstance(config_object, str) else app.config.update(config_object)
+        if isinstance(config_object, str):
+            app.config.from_object(config_object)
+        elif isinstance(config_object, dict):
+            app.config.update(config_object)
+        else:
+            raise TypeError("config_object must be a str or dict")
 
     db.init_app(app)
 

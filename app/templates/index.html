@@ -1,160 +1,187 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8" />
-    <title>Task Note Manager</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-direction: column;
-        }
+{% block title %}Strona główna{% endblock %}
 
-        .container {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+{% block styles %}
+<style>
+    .task-item {
+        margin-bottom: 1rem;
+    }
+    .note-item {
+        margin-bottom: 1rem;
+    }
+    .category-item {
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
 
-        .welcome {
-            font-size: 36px;
-            text-align: center;
-            margin-top: 40px;
-            margin-bottom: 40px;
-            width: 100%;
-        }
-
-        .form-wrapper {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        form div {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 0.5rem;
-        }
-
-        button {
-            padding: 0.5rem 1rem;
-        }
-
-        .flash {
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            border-radius: 4px;
-        }
-
-        .flash-success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .flash-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .register-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .register-form {
-            display: none;
-            margin-top: 20px;
-        }
-    </style>
-    <script>
-        function toggleRegister() {
-            const form = document.getElementById("register-form");
-            form.style.display = form.style.display === "none" ? "block" : "none";
-        }
-    </script>
-</head>
-<body>
-    <div class="container">
-        <div class="welcome">
-            Task Note Manager
-        </div>
-
-        <div class="form-wrapper">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                  <div class="flash flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-
-            <form method="POST" action="{{ url_for('auth.login') }}">
-                {{ login_form.hidden_tag() }}
-                <div>
-                    {{ login_form.email.label }}
-                    {{ login_form.email(size=32) }}
-                </div>
-                <div>
-                    {{ login_form.password.label }}
-                    {{ login_form.password(size=32) }}
-                </div>
-                <div>
-                    {{ login_form.submit() }}
-                </div>
-            </form>
-
-            <div class="register-link">
-                Nie masz konta? <a href="#" onclick="toggleRegister()">Zarejestruj się</a>
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Ostatnie zadania</h4>
+                <a href="{{ url_for('tasks.create_task') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus"></i>
+                </a>
             </div>
-
-            <form id="register-form" class="register-form" method="POST" action="{{ url_for('auth.register') }}">
-                {{ register_form.hidden_tag() }}
-                <div>
-                    {{ register_form.username.label }}
-                    {{ register_form.username(size=32) }}
+            <div class="card-body">
+                {% if recent_tasks %}
+                <div class="list-group">
+                    {% for task in recent_tasks %}
+                    <div class="list-group-item task-item" style="background-color: {% if task.priority == 'high' %}#ffebee{% elif task.priority == 'medium' %}#fff3e0{% else %}#e8f5e9{% endif %} !important; border-left: 4px solid {% if task.priority == 'high' %}#f44336{% elif task.priority == 'medium' %}#ff9800{% else %}#4caf50{% endif %} !important;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">
+                                    {{ task.title }}
+                                    <span class="badge {% if task.priority == 'high' %}bg-danger{% elif task.priority == 'medium' %}bg-warning{% else %}bg-success{% endif %}">
+                                        {% if task.priority == 'high' %}
+                                            Wysoki
+                                        {% elif task.priority == 'medium' %}
+                                            Średni
+                                        {% else %}
+                                            Niski
+                                        {% endif %}
+                                    </span>
+                                </h5>
+                                <p class="mb-1">{{ task.description }}</p>
+                                <small class="text-muted">
+                                    Termin: {{ task.due_date.strftime('%d.%m.%Y %H:%M') if task.due_date else 'Brak' }} |
+                                    Kategoria: {{ task.category.name if task.category else 'Brak' }}
+                                </small>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('tasks.edit_task', id=task.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                <div>
-                    {{ register_form.email.label }}
-                    {{ register_form.email(size=32) }}
-                </div>
-                <div>
-                    {{ register_form.password.label }}
-                    {{ register_form.password(size=32) }}
-                </div>
-                <div>
-                    {{ register_form.confirm_password.label }}
-                    {{ register_form.confirm_password(size=32) }}
-                </div>
-                <div>
-                    {{ register_form.submit() }}
-                </div>
-            </form>
+                {% else %}
+                <p class="text-muted">Brak zadań.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
-</body>
-</html>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Ostatnie notatki</h4>
+                <a href="{{ url_for('notes.create_note') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                {% if recent_notes %}
+                <div class="list-group">
+                    {% for note in recent_notes %}
+                    <div class="list-group-item note-item" style="background-color: {% if loop.index is even %}#bbdefb{% else %}#e3f2fd{% endif %} !important; border-left: 4px solid #2196f3 !important;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">{{ note.title }}</h5>
+                                <p class="mb-1">{{ note.content }}</p>
+                                <small class="text-muted">
+                                    Kategoria: {{ note.category.name if note.category else 'Brak' }}
+                                </small>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('notes.edit_note', id=note.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Brak notatek.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Kategorie</h4>
+                <a href="{{ url_for('categories.create_category') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                {% if categories %}
+                <div class="list-group">
+                    {% for category in categories %}
+                    <div class="list-group-item category-item" style="background-color: {% if loop.index is even %}#c5cae9{% else %}#e8eaf6{% endif %} !important; border-left: 4px solid #3f51b5 !important;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">{{ category.name }}</h5>
+                                <small class="text-muted">
+                                    Zadania: {{ category.tasks.count() }} |
+                                    Notatki: {{ category.notes.count() }}
+                                </small>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('categories.edit_category', id=category.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Brak kategorii.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Statystyki zadań</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Łączna liczba zadań:</strong> {{ task_stats.total }}
+                </p>
+                <p class="mb-2">
+                    <strong>Zadania z wysokim priorytetem:</strong> {{ task_stats.high_priority }}
+                </p>
+                <p class="mb-2">
+                    <strong>Zadania ze średnim priorytetem:</strong> {{ task_stats.medium_priority }}
+                </p>
+                <p class="mb-0">
+                    <strong>Zadania z niskim priorytetem:</strong> {{ task_stats.low_priority }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Statystyki notatek</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Łączna liczba notatek:</strong> {{ note_stats.total }}
+                </p>
+                <p class="mb-2">
+                    <strong>Notatki z kategoriami:</strong> {{ note_stats.with_category }}
+                </p>
+                <p class="mb-0">
+                    <strong>Notatki bez kategorii:</strong> {{ note_stats.without_category }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
