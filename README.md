@@ -106,7 +106,7 @@ Ten projekt jest udostępniany na licencji MIT. Szczegóły znajdują się w pli
 
 ## Autor
 
-[Twoje Imię i Nazwisko]
+Grzegorz Żywicki
 
 ## Wersja
 
