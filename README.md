@@ -35,7 +35,7 @@ Task Note Manager to nowoczesna aplikacja webowa do zarządzania zadaniami i not
 - Flask-Login
 - Flask-WTF
 - Bootstrap 5
-- SQLite (domyślnie) lub PostgreSQL
+- PostgreSQL
 
 ## Instalacja
 
