@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}502 - Błąd bramy{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h1 class="display-1">502</h1>
+        <h2>Błąd bramy</h2>
+        <p class="lead">Przepraszamy, ale wystąpił błąd bramy. Spróbuj ponownie później.</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Powrót do strony głównej</a>
+    </div>
+</div>
+{% endblock %} 

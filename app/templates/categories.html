@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Kategorie{% endblock %}
+
+{% block styles %}
+<style>
+    .category-item {
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Lista kategorii</h4>
+                <a href="{{ url_for('categories.create_category') }}" class="btn btn-primary">
+                    <i class="bi bi-plus"></i> Nowa kategoria
+                </a>
+            </div>
+            <div class="card-body">
+                {% if categories %}
+                <div class="row">
+                    {% for category in categories %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card category-item" style="background-color: {% if loop.index is even %}#c5cae9{% else %}#e8eaf6{% endif %} !important; border-left: 4px solid #3f51b5 !important;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">{{ category.name }}</h5>
+                                    <div>
+                                        <a href="{{ url_for('categories.edit_category', id=category.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory({{ category.id }})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        Zadania: {{ category.tasks.count() }}<br>
+                                        Notatki: {{ category.notes.count() }}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Brak kategorii.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Statystyki</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    <strong>Liczba kategorii:</strong> {{ categories|length }}
+                </p>
+                <p class="mb-2">
+                    <strong>Łączna liczba zadań:</strong> 
+                    {% set total_tasks = namespace(count=0) %}
+                    {% for category in categories %}
+                        {% set total_tasks.count = total_tasks.count + category.tasks.count() %}
+                    {% endfor %}
+                    {{ total_tasks.count }}
+                </p>
+                <p class="mb-0">
+                    <strong>Łączna liczba notatek:</strong>
+                    {% set total_notes = namespace(count=0) %}
+                    {% for category in categories %}
+                        {% set total_notes.count = total_notes.count + category.notes.count() %}
+                    {% endfor %}
+                    {{ total_notes.count }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function deleteCategory(id) {
+    if (confirm('Czy na pewno chcesz usunąć tę kategorię? Wszystkie powiązane zadania i notatki zostaną odłączone od kategorii.')) {
+        fetch(`/categories/${id}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload();
+            }
+        });
+    }
+}
+</script>
+{% endblock %} 

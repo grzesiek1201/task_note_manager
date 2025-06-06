@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edycja kategorii</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.name.label }}<br>{{ form.name() }}</p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %} 

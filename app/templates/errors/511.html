@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}511 - Wymagana autoryzacja sieciowa{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h1 class="display-1">511</h1>
+        <h2>Wymagana autoryzacja sieciowa</h2>
+        <p class="lead">Przepraszamy, ale wymagana jest autoryzacja sieciowa do uzyskania dostępu.</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Powrót do strony głównej</a>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Nowe zadanie</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.title.label }}<br>{{ form.title() }}</p>
+    <p>{{ form.description.label }}<br>{{ form.description() }}</p>
+    <p>{{ form.due_date.label }}<br>{{ form.due_date() }}</p>
+    <p>{{ form.priority.label }}<br>{{ form.priority() }}</p>
+    <p>{{ form.category_id.label }}<br>{{ form.category_id() }}</p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %} 
