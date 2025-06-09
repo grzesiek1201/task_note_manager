@@ -1,113 +1,109 @@
 # Task Note Manager
 
-Task Note Manager to nowoczesna aplikacja webowa do zarządzania zadaniami i notatkami, napisana w Pythonie z wykorzystaniem frameworka Flask. Aplikacja oferuje intuicyjny interfejs użytkownika, zaawansowane funkcje organizacyjne i elastyczny system kategoryzacji.
+**Task Note Manager** is a modern web application for managing tasks and notes, built with Python and the Flask framework. It features an intuitive user interface, advanced organization tools, and a flexible category system.
 
-## Funkcje
+## Features
 
-- **Zarządzanie zadaniami**
-  - Tworzenie, edycja i usuwanie zadań
-  - Ustawianie priorytetów (wysoki, średni, niski)
-  - Przypisywanie terminów wykonania
-  - Kategoryzacja zadań
-  - Oznaczanie zadań jako wykonane
+### ✅ Task Management
+- Create, edit, and delete tasks
+- Set priority levels (High, Medium, Low)
+- Assign due dates
+- Categorize tasks
+- Mark tasks as completed
 
-- **Zarządzanie notatkami**
-  - Tworzenie, edycja i usuwanie notatek
-  - Formatowanie tekstu
-  - Kategoryzacja notatek
-  - Szybki dostęp do najnowszych notatek
+### 📝 Note Management
+- Create, edit, and delete notes
+- Text formatting support
+- Categorize notes
+- Quick access to recent notes
 
-- **System kategorii**
-  - Tworzenie własnych kategorii
-  - Przypisywanie kolorów do kategorii
-  - Filtrowanie zadań i notatek według kategorii
+### 🗂️ Category System
+- Create custom categories
+- Assign colors to categories
+- Filter tasks and notes by category
 
-- **Statystyki i raporty**
-  - Przegląd statystyk zadań według priorytetów
-  - Statystyki notatek według kategorii
-  - Wykresy i wizualizacje danych
+### 📊 Statistics & Reports
+- Task statistics by priority
+- Note statistics by category
+- Charts and visual data summaries
 
-## Wymagania techniczne
+## Tech Stack
 
-- Python 3.8+
-- Flask 2.0+
-- SQLAlchemy
-- Flask-Login
-- Flask-WTF
-- Bootstrap 5
-- PostgreSQL
+- **Backend:** Python 3.8+, Flask 2.0+, SQLAlchemy, Flask-Login, Flask-WTF
+- **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript
+- **Database:** PostgreSQL
+- **Dev Tools:** Virtualenv, Flask-Migrate, pip, Git
 
-## Instalacja
+## Installation
 
-1. Sklonuj repozytorium:
+1. Clone the repository:
 ```bash
-git clone https://github.com/twoje-konto/task-note-manager.git
+git clone https://github.com/your-username/task-note-manager.git
 cd task-note-manager
 ```
 
-2. Utwórz i aktywuj wirtualne środowisko:
+2. Create and activate a virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+source venv/bin/activate       # Linux/Mac
+venv\Scripts\activate          # Windows
 ```
 
-3. Zainstaluj zależności:
+3. Install dependencies::
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Skonfiguruj zmienne środowiskowe:
+4. Configure environment variables:
 ```bash
 cp .env.example .env
-# Edytuj plik .env i ustaw odpowiednie wartości
+# Edit the .env file with your settings
 ```
 
-5. Zainicjalizuj bazę danych:
+5. Initialize the database::
 ```bash
 flask db upgrade
 ```
 
-6. Uruchom aplikację:
+6. Run the application:
 ```bash
 flask run
 ```
 
-## Struktura projektu
+## Project Structure
 
 ```
 task-note-manager/
 ├── app/
-│   ├── auth/           # Moduł autoryzacji
-│   ├── tasks/          # Moduł zadań
-│   ├── notes/          # Moduł notatek
-│   ├── categories/     # Moduł kategorii
-│   ├── main/           # Moduł główny
-│   ├── models/         # Modele danych
-│   ├── templates/      # Szablony HTML
-│   └── static/         # Pliki statyczne
-├── migrations/         # Migracje bazy danych
-├── tests/             # Testy jednostkowe
-├── config.py          # Konfiguracja aplikacji
-├── requirements.txt   # Zależności projektu
-└── README.md          # Dokumentacja
+│   ├── auth/           # Authentication module
+│   ├── tasks/          # Task logic
+│   ├── notes/          # Notes logic
+│   ├── categories/     # Categories logic
+│   ├── main/           # Core views
+│   ├── models/         # Data models
+│   ├── templates/      # HTML templates
+│   └── static/         # Static assets (CSS/JS)
+├── migrations/         # Database migrations
+├── tests/              # Unit tests
+├── config.py           # App configuration
+├── requirements.txt    # Project dependencies
+└── README.md           # Project documentation
 ```
 
-## Testy
+## Tests
 
-Aby uruchomić testy:
+run:
 ```bash
 python -m pytest
 ```
 
-## Licencja
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-Ten projekt jest udostępniany na licencji MIT. Szczegóły znajdują się w pliku LICENSE.
-
-## Autor
+## Author
 
 Grzegorz Żywicki
 
-## Wersja
+## Version
 
 1.0.0
