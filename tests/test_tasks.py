@@ -182,10 +182,10 @@ def test_create_task(auth_client, app, test_user, test_categories):
 
 
 def test_edit_task_page(auth_client, test_tasks):
-    """Test wyświetlania strony edycji zadania."""
+    """Test displaying the task edit page."""
     response = auth_client.get(f'/tasks/{test_tasks[0].id}/edit')
     assert response.status_code == 200
-    assert b'Edycja zadania' in response.data
+    assert 'Edit task' in response.data.decode('utf-8')
 
 
 def test_edit_task(auth_client, app, test_tasks, test_categories):
@@ -209,10 +209,10 @@ def test_edit_task(auth_client, app, test_tasks, test_categories):
 
 
 def test_delete_task(auth_client, app, test_tasks):
-    """Test usuwania zadania."""
+    """Test deleting a task."""
     response = auth_client.post(f'/tasks/{test_tasks[0].id}/delete', follow_redirects=True)
     assert response.status_code == 200
-    assert b'Zadanie zostało usunięte' in response.data
+    assert 'Task has been deleted!' in response.data.decode('utf-8')
 
     with app.app_context():
         task = Task.query.get(test_tasks[0].id)

@@ -57,7 +57,7 @@ def test_note_model(app, test_user):
         assert str(note) == '<Note Test note>'
 
 def test_category_model(app, test_user):
-    """Test modelu kategorii."""
+    """Test category model."""
     with app.app_context():
         category = Category(
             name='Test category',

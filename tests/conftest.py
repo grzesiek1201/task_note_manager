@@ -44,10 +44,10 @@ def auth_client(client, test_user):
 
 @pytest.fixture
 def test_categories(app, test_user):
-    """Tworzy kategorie testowe."""
+    """Creates test categories."""
     categories = [
-        Category(name='Praca', color='#FF0000', user=test_user),
-        Category(name='Dom', color='#00FF00', user=test_user),
+        Category(name='Work', color='#FF0000', user=test_user),
+        Category(name='Home', color='#00FF00', user=test_user),
         Category(name='Hobby', color='#0000FF', user=test_user)
     ]
     for category in categories:

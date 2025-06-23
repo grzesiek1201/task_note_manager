@@ -39,24 +39,24 @@ def test_edit_note_page(auth_client, test_notes):
 def test_edit_note(auth_client, app, test_notes, test_categories):
     """Test editing a note."""
     response = auth_client.post(f'/notes/{test_notes[0].id}/edit', data={
-        'title': 'Zaktualizowana notatka',
-        'content': 'Zaktualizowana treść',
+        'title': 'Updated note',
+        'content': 'Updated content',
         'category_id': test_categories[1].id
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Notatka została zaktualizowana' in response.data
+    assert 'Note has been updated!' in response.data.decode('utf-8')
 
     with app.app_context():
         note = Note.query.get(test_notes[0].id)
-        assert note.title == 'Zaktualizowana notatka'
-        assert note.content == 'Zaktualizowana treść'
+        assert note.title == 'Updated note'
+        assert note.content == 'Updated content'
         assert note.category_id == test_categories[1].id
 
 def test_delete_note(auth_client, app, test_notes):
     """Test deleting a note."""
     response = auth_client.post(f'/notes/{test_notes[0].id}/delete', follow_redirects=True)
     assert response.status_code == 200
-    assert b'Notatka została usunięta' in response.data
+    assert 'Note has been deleted!' in response.data.decode('utf-8')
 
     with app.app_context():
         note = Note.query.get(test_notes[0].id)

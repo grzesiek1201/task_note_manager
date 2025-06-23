@@ -6,7 +6,7 @@ def test_categories_page(auth_client):
     """Test displaying the categories page."""
     response = auth_client.get('/categories')
     assert response.status_code == 200
-    assert b'Categories' in response.data
+    assert 'Categories' in response.data.decode('utf-8')
 
 def test_create_category_page(auth_client):
     """Test displaying the create category page."""
