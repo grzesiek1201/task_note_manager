@@ -14,20 +14,20 @@ def test_create_note_page(auth_client):
     assert response.status_code == 200
     assert 'New note' in response.data.decode('utf-8')
 
-def test_create_note(auth_client, app, test_user, test_categories):
-    """Test creating a new note."""
+def test_create_note(auth_client, app, test_categories):
+    """Test creating a note."""
     response = auth_client.post('/notes/create', data={
-        'title': 'New note',
-        'content': 'New note content',
+        'title': 'Test note',
+        'content': 'Test content',
         'category_id': test_categories[0].id
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert 'Note has been created' in response.data.decode('utf-8')
+    assert 'Note has been created!' in response.data.decode('utf-8')
 
     with app.app_context():
-        note = Note.query.filter_by(title='New note').first()
+        note = Note.query.filter_by(title='Test note').first()
         assert note is not None
-        assert note.content == 'New note content'
+        assert note.content == 'Test content'
         assert note.category_id == test_categories[0].id
 
 def test_edit_note_page(auth_client, test_notes):
