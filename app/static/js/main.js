@@ -13,7 +13,7 @@ function hideModal(modalId) {
     }
 }
 
-// Zamykanie modalu po kliknięciu poza nim
+// Closing modal when clicking outside of it
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
@@ -46,12 +46,12 @@ function toggleTaskComplete(taskId) {
                 }
             }
         } else {
-            alert('Wystąpił błąd podczas aktualizacji zadania');
+            alert('An error occurred while updating the task');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Wystąpił błąd podczas aktualizacji zadania');
+        alert('An error occurred while updating the task');
     });
 }
 
@@ -106,7 +106,7 @@ function editTask(taskId) {
 
 // Funkcje do obsługi notatek
 function deleteNote(noteId) {
-    if (confirm('Czy na pewno chcesz usunąć tę notatkę?')) {
+    if (confirm('Are you sure you want to delete this note?')) {
         fetch(`/notes/${noteId}/delete`, {
             method: 'POST',
             headers: {
@@ -121,12 +121,12 @@ function deleteNote(noteId) {
                 }
                 window.location.reload();
             } else {
-                alert('Wystąpił błąd podczas usuwania notatki');
+                alert('An error occurred while deleting the note');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Wystąpił błąd podczas usuwania notatki');
+            alert('An error occurred while deleting the note');
         });
     }
 }
@@ -152,7 +152,7 @@ function editNote(noteId) {
 
 // Funkcje do obsługi kategorii
 function deleteCategory(categoryId) {
-    if (confirm('Czy na pewno chcesz usunąć tę kategorię?')) {
+    if (confirm('Are you sure you want to delete this category?')) {
         fetch(`/categories/${categoryId}/delete`, {
             method: 'POST',
             headers: {
@@ -167,12 +167,12 @@ function deleteCategory(categoryId) {
                 }
                 window.location.reload();
             } else {
-                alert('Wystąpił błąd podczas usuwania kategorii');
+                alert('An error occurred while deleting the category');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Wystąpił błąd podczas usuwania kategorii');
+            alert('An error occurred while deleting the category');
         });
     }
 } 

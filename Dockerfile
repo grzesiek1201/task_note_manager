@@ -9,12 +9,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Kopiowanie plików projektu
-COPY pyproject.toml .
-COPY README.md .
-COPY app/ app/
+COPY . .
 
 # Instalacja zależności Pythona
-RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir gunicorn
 
 # Ustawienie zmiennych środowiskowych
 ENV FLASK_APP=app
@@ -24,5 +23,8 @@ ENV PYTHONUNBUFFERED=1
 # Port
 EXPOSE 5000
 
-# Uruchomienie aplikacji
-CMD ["flask", "run", "--host=0.0.0.0"] 
+# Skrypt startowy
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
+CMD ["./entrypoint.sh"] 

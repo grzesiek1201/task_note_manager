@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Kategorie{% endblock %}
+{% block title %}Categories{% endblock %}
 
 {% block styles %}
 <style>
@@ -15,9 +15,9 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Lista kategorii</h4>
+                <h4 class="mb-0">Category list</h4>
                 <a href="{{ url_for('categories.create_category') }}" class="btn btn-primary">
-                    <i class="bi bi-plus"></i> Nowa kategoria
+                    <i class="bi bi-plus"></i> New category
                 </a>
             </div>
             <div class="card-body">
@@ -40,8 +40,8 @@
                                 </div>
                                 <p class="card-text">
                                     <small class="text-muted">
-                                        Zadania: {{ category.tasks.count() }}<br>
-                                        Notatki: {{ category.notes.count() }}
+                                        Tasks: {{ category.tasks.count() }}<br>
+                                        Notes: {{ category.notes.count() }}
                                     </small>
                                 </p>
                             </div>
@@ -50,7 +50,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-muted">Brak kategorii.</p>
+                <p class="text-muted">No categories.</p>
                 {% endif %}
             </div>
         </div>
@@ -59,14 +59,14 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Statystyki</h5>
+                <h5 class="mb-0">Statistics</h5>
             </div>
             <div class="card-body">
                 <p class="mb-2">
-                    <strong>Liczba kategorii:</strong> {{ categories|length }}
+                    <strong>Category count:</strong> {{ categories|length }}
                 </p>
                 <p class="mb-2">
-                    <strong>Łączna liczba zadań:</strong> 
+                    <strong>Total tasks:</strong> 
                     {% set total_tasks = namespace(count=0) %}
                     {% for category in categories %}
                         {% set total_tasks.count = total_tasks.count + category.tasks.count() %}
@@ -74,7 +74,7 @@
                     {{ total_tasks.count }}
                 </p>
                 <p class="mb-0">
-                    <strong>Łączna liczba notatek:</strong>
+                    <strong>Total notes:</strong>
                     {% set total_notes = namespace(count=0) %}
                     {% for category in categories %}
                         {% set total_notes.count = total_notes.count + category.notes.count() %}
@@ -88,7 +88,7 @@
 
 <script>
 function deleteCategory(id) {
-    if (confirm('Czy na pewno chcesz usunąć tę kategorię? Wszystkie powiązane zadania i notatki zostaną odłączone od kategorii.')) {
+    if (confirm('Are you sure you want to delete this category? All related tasks and notes will be unassigned from the category.')) {
         fetch(`/categories/${id}/delete`, {
             method: 'POST',
             headers: {

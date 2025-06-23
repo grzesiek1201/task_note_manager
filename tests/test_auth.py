@@ -3,13 +3,13 @@ from flask import url_for
 from app.models import User
 
 def test_register_page(client):
-    """Test wyświetlania strony rejestracji."""
+    """Test registration page display."""
     response = client.get('/register')
     assert response.status_code == 200
-    assert b'Rejestracja' in response.data
+    assert 'Registration' in response.data.decode('utf-8')
 
 def test_register(client, app):
-    """Test rejestracji nowego użytkownika."""
+    """Test new user registration."""
     response = client.post('/register', data={
         'username': 'newuser',
         'email': 'new@example.com',
@@ -17,7 +17,7 @@ def test_register(client, app):
         'password2': 'newpassword'
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Zarejestrowano pomyślnie' in response.data
+    assert 'Registration successful' in response.data.decode('utf-8')
 
     with app.app_context():
         user = User.query.filter_by(username='newuser').first()
@@ -25,70 +25,70 @@ def test_register(client, app):
         assert user.email == 'new@example.com'
 
 def test_register_duplicate_username(client, test_user):
-    """Test rejestracji z istniejącą nazwą użytkownika."""
+    """Test registration with existing username."""
     response = client.post('/register', data={
         'username': 'testuser',
         'email': 'different@example.com',
         'password': 'password',
         'password2': 'password'
     })
-    assert b'Użyj innej nazwy użytkownika' in response.data
+    assert 'Please use a different username.' in response.data.decode('utf-8')
 
 def test_register_duplicate_email(client, test_user):
-    """Test rejestracji z istniejącym adresem email."""
+    """Test registration with existing email."""
     response = client.post('/register', data={
         'username': 'different',
         'email': 'test@example.com',
         'password': 'password',
         'password2': 'password'
     })
-    assert b'Użyj innego adresu email' in response.data
+    assert 'Please use a different email address.' in response.data.decode('utf-8')
 
 def test_login_page(client):
-    """Test wyświetlania strony logowania."""
+    """Test login page display."""
     response = client.get('/login')
     assert response.status_code == 200
-    assert b'Logowanie' in response.data
+    assert 'Login' in response.data.decode('utf-8')
 
 def test_login(client, test_user):
-    """Test logowania użytkownika."""
+    """Test user login."""
     response = client.post('/login', data={
         'username': 'testuser',
         'password': 'testpassword'
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Witaj' in response.data
+    assert 'Welcome' in response.data.decode('utf-8')
 
 def test_login_invalid_username(client):
-    """Test logowania z nieprawidłową nazwą użytkownika."""
+    """Test login with invalid username."""
     response = client.post('/login', data={
         'username': 'nonexistent',
         'password': 'password'
     })
-    assert b'Nieprawidłowa nazwa użytkownika lub hasło' in response.data
+    assert 'Invalid username or password' in response.data.decode('utf-8')
 
 def test_login_invalid_password(client, test_user):
-    """Test logowania z nieprawidłowym hasłem."""
+    """Test login with invalid password."""
     response = client.post('/login', data={
         'username': 'testuser',
         'password': 'wrongpassword'
     })
-    assert b'Nieprawidłowa nazwa użytkownika lub hasło' in response.data
+    assert 'Invalid username or password' in response.data.decode('utf-8')
 
 def test_logout(auth_client):
-    """Test wylogowania użytkownika."""
+    """Test user logout."""
     response = auth_client.get('/logout', follow_redirects=True)
     assert response.status_code == 200
-    assert b'Zostałeś wylogowany' in response.data
+    assert 'You have been logged out' in response.data.decode('utf-8')
 
 def test_protected_route(client):
-    """Test dostępu do chronionej strony bez logowania."""
+    """Test access to protected route without login."""
     response = client.get('/')
     assert response.status_code == 302
     assert '/login' in response.headers['Location']
 
 def test_remember_me(client, test_user):
-    """Test funkcji 'Zapamiętaj mnie'."""
+    """Test 'Remember me' functionality."""
     response = client.post('/login', data={
         'username': 'testuser',
         'password': 'testpassword',

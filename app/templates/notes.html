@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Notatki{% endblock %}
+{% block title %}Notes{% endblock %}
 
 {% block styles %}
 <style>
@@ -15,9 +15,9 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Lista notatek</h4>
+                <h4 class="mb-0">Note list</h4>
                 <a href="{{ url_for('notes.create_note') }}" class="btn btn-primary">
-                    <i class="bi bi-plus"></i> Nowa notatka
+                    <i class="bi bi-plus"></i> New note
                 </a>
             </div>
             <div class="card-body">
@@ -41,7 +41,7 @@
                                 <p class="card-text">{{ note.content }}</p>
                                 <p class="card-text">
                                     <small class="text-muted">
-                                        Kategoria: {{ note.category.name if note.category else 'Brak' }}
+                                        Category: {{ note.category.name if note.category else 'None' }}
                                     </small>
                                 </p>
                             </div>
@@ -50,7 +50,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-muted">Brak notatek.</p>
+                <p class="text-muted">No notes.</p>
                 {% endif %}
             </div>
         </div>
@@ -59,18 +59,18 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Statystyki</h5>
+                <h5 class="mb-0">Statistics</h5>
             </div>
             <div class="card-body">
                 <p class="mb-2">
-                    <strong>Liczba notatek:</strong> {{ notes|length }}
+                    <strong>Note count:</strong> {{ notes|length }}
                 </p>
                 <p class="mb-2">
-                    <strong>Notatki z kategoriami:</strong>
+                    <strong>Notes with categories:</strong>
                     {{ notes|selectattr('category', 'defined')|list|length }}
                 </p>
                 <p class="mb-0">
-                    <strong>Notatki bez kategorii:</strong>
+                    <strong>Notes without categories:</strong>
                     {{ notes|rejectattr('category', 'defined')|list|length }}
                 </p>
             </div>
@@ -80,7 +80,7 @@
 
 <script>
 function deleteNote(id) {
-    if (confirm('Czy na pewno chcesz usunąć tę notatkę?')) {
+    if (confirm('Are you sure you want to delete this note?')) {
         fetch(`/notes/${id}/delete`, {
             method: 'POST',
             headers: {

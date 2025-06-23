@@ -3,104 +3,104 @@ from app.models import Category, User
 from app import db
 
 def test_categories_page(auth_client):
-    """Test wyświetlania strony kategorii."""
+    """Test displaying the categories page."""
     response = auth_client.get('/categories')
     assert response.status_code == 200
-    assert b'Kategorie' in response.data
+    assert b'Categories' in response.data
 
 def test_create_category_page(auth_client):
-    """Test wyświetlania strony tworzenia kategorii."""
+    """Test displaying the create category page."""
     response = auth_client.get('/categories/create')
     assert response.status_code == 200
-    assert b'Nowa kategoria' in response.data
+    assert 'New category' in response.data.decode('utf-8')
 
 def test_create_category(auth_client, app, test_user):
-    """Test tworzenia nowej kategorii."""
+    """Test creating a new category."""
     response = auth_client.post('/categories/create', data={
-        'name': 'Nowa kategoria',
+        'name': 'New category',
         'color': '#FF0000'
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Kategoria została utworzona' in response.data
+    assert 'Category has been created' in response.data.decode('utf-8')
 
     with app.app_context():
-        category = Category.query.filter_by(name='Nowa kategoria').first()
+        category = Category.query.filter_by(name='New category').first()
         assert category is not None
         assert category.color == '#FF0000'
         assert category.user_id == test_user.id
 
 def test_edit_category_page(auth_client, test_categories):
-    """Test wyświetlania strony edycji kategorii."""
+    """Test displaying the edit category page."""
     response = auth_client.get(f'/categories/{test_categories[0].id}/edit')
     assert response.status_code == 200
-    assert b'Edycja kategorii' in response.data
+    assert b'Edit category' in response.data
 
 def test_edit_category(auth_client, app, test_categories):
-    """Test edycji kategorii."""
+    """Test editing a category."""
     response = auth_client.post(f'/categories/{test_categories[0].id}/edit', data={
-        'name': 'Zaktualizowana kategoria',
+        'name': 'Updated category',
         'color': '#00FF00'
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Kategoria została zaktualizowana' in response.data
+    assert b'Category has been updated' in response.data
 
     with app.app_context():
         category = Category.query.get(test_categories[0].id)
-        assert category.name == 'Zaktualizowana kategoria'
+        assert category.name == 'Updated category'
         assert category.color == '#00FF00'
 
 def test_delete_category(auth_client, app, test_categories):
-    """Test usuwania kategorii."""
+    """Test deleting a category."""
     response = auth_client.post(f'/categories/{test_categories[0].id}/delete', follow_redirects=True)
     assert response.status_code == 200
-    assert b'Kategoria została usunięta' in response.data
+    assert b'Category has been deleted' in response.data
 
     with app.app_context():
         category = Category.query.get(test_categories[0].id)
         assert category is None
 
 def test_category_validation(auth_client):
-    """Test walidacji danych kategorii."""
+    """Test category data validation."""
     response = auth_client.post('/categories/create', data={
-        'name': '',  # Puste pole
+        'name': '',  # Empty field
         'color': '#FF0000'
     })
-    assert b'To pole jest wymagane' in response.data
+    assert b'This field is required' in response.data
 
 def test_category_access_control(auth_client, app, test_user):
-    """Test kontroli dostępu do kategorii."""
-    # Tworzenie kategorii dla innego użytkownika
+    """Test category access control."""
+    # Creating a category for another user
     other_user = User(username='other', email='other@example.com')
     other_user.set_password('password')
     db.session.add(other_user)
     db.session.commit()
 
     category = Category(
-        name='Cudza kategoria',
+        name='Foreign category',
         color='#FF0000',
         user=other_user
     )
     db.session.add(category)
     db.session.commit()
 
-    # Próba edycji cudzej kategorii
+    # Attempting to edit a foreign category
     response = auth_client.get(f'/categories/{category.id}/edit')
     assert response.status_code == 404
 
-    # Próba usunięcia cudzej kategorii
+    # Attempting to delete a foreign category
     response = auth_client.post(f'/categories/{category.id}/delete')
     assert response.status_code == 404
 
 def test_category_with_default_color(auth_client, app, test_user):
-    """Test tworzenia kategorii z domyślnym kolorem."""
+    """Test creating a category with default color."""
     response = auth_client.post('/categories/create', data={
-        'name': 'Kategoria z domyślnym kolorem',
-        'color': ''  # Puste pole koloru
+        'name': 'Category with default color',
+        'color': ''
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Kategoria została utworzona' in response.data
+    assert 'Category has been created' in response.data.decode('utf-8')
 
     with app.app_context():
-        category = Category.query.filter_by(name='Kategoria z domyślnym kolorem').first()
+        category = Category.query.filter_by(name='Category with default color').first()
         assert category is not None
-        assert category.color == '#000000'  # Domyślny kolor 
+        assert category.color == '#000000'  # Default color 

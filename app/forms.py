@@ -6,111 +6,111 @@ from app.models import User
 
 class LoginForm(FlaskForm):
     """
-    Formularz logowania.
+    Login form.
     
     Attributes:
-        username: Pole nazwy użytkownika.
-        password: Pole hasła.
-        remember_me: Pole zapamiętania użytkownika.
-        submit: Przycisk zatwierdzający.
+        username: Username field.
+        password: Password field.
+        remember_me: Remember me field.
+        submit: Submit button.
     """
-    username = StringField('Nazwa użytkownika', validators=[DataRequired()])
-    password = PasswordField('Hasło', validators=[DataRequired()])
-    remember_me = BooleanField('Zapamiętaj mnie')
-    submit = SubmitField('Zaloguj')
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember me')
+    submit = SubmitField('Login')
 
 
 class RegistrationForm(FlaskForm):
     """
-    Formularz rejestracji.
+    Registration form.
     
     Attributes:
-        username: Pole nazwy użytkownika.
-        email: Pole adresu email.
-        password: Pole hasła.
-        password2: Pole potwierdzenia hasła.
-        submit: Przycisk zatwierdzający.
+        username: Username field.
+        email: Email field.
+        password: Password field.
+        password2: Confirm password field.
+        submit: Submit button.
     """
-    username = StringField('Nazwa użytkownika', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Hasło', validators=[DataRequired()])
-    password2 = PasswordField('Potwierdź hasło', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Zarejestruj')
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
 
     def validate_username(self, username):
         """
-        Sprawdza, czy nazwa użytkownika jest unikalna.
+        Checks if the username is unique.
         
         Args:
-            username: Nazwa użytkownika do sprawdzenia.
+            username: Username to check.
         
         Raises:
-            ValidationError: Jeśli nazwa użytkownika już istnieje.
+            ValidationError: If the username already exists.
         """
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
-            raise ValidationError('Użyj innej nazwy użytkownika.')
+            raise ValidationError('Please use a different username.')
 
     def validate_email(self, email):
         """
-        Sprawdza, czy adres email jest unikalny.
+        Checks if the email is unique.
         
         Args:
-            email: Adres email do sprawdzenia.
+            email: Email to check.
         
         Raises:
-            ValidationError: Jeśli adres email już istnieje.
+            ValidationError: If the email already exists.
         """
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
-            raise ValidationError('Użyj innego adresu email.')
+            raise ValidationError('Please use a different email address.')
 
 
 class TaskForm(FlaskForm):
     """
-    Formularz zadania.
+    Task form.
     
     Attributes:
-        title: Pole tytułu zadania.
-        description: Pole opisu zadania.
-        due_date: Pole terminu wykonania zadania.
-        priority: Pole priorytetu zadania.
-        category: Pole kategorii zadania.
-        submit: Przycisk zatwierdzający.
+        title: Title field.
+        description: Description field.
+        due_date: Due date field.
+        priority: Priority field.
+        category_id: Category field.
+        submit: Submit button.
     """
-    title = StringField('Tytuł', validators=[DataRequired()])
-    description = TextAreaField('Opis')
-    due_date = DateTimeField('Termin', format='%Y-%m-%d %H:%M')
-    priority = SelectField('Priorytet', choices=[('high', 'Wysoki'), ('normal', 'Normalny'), ('low', 'Niski')])
-    category = SelectField('Kategoria', coerce=int)
-    submit = SubmitField('Zapisz')
+    title = StringField('Title', validators=[DataRequired()])
+    description = TextAreaField('Description')
+    due_date = DateTimeField('Due date', format='%Y-%m-%d %H:%M')
+    priority = SelectField('Priority', choices=[('high', 'High'), ('normal', 'Normal'), ('low', 'Low')])
+    category_id = SelectField('Category', coerce=int)
+    submit = SubmitField('Save')
 
 
 class NoteForm(FlaskForm):
     """
-    Formularz notatki.
+    Note form.
     
     Attributes:
-        title: Pole tytułu notatki.
-        content: Pole treści notatki.
-        category: Pole kategorii notatki.
-        submit: Przycisk zatwierdzający.
+        title: Title field.
+        content: Content field.
+        category_id: Category field.
+        submit: Submit button.
     """
-    title = StringField('Tytuł', validators=[DataRequired()])
-    content = TextAreaField('Treść')
-    category = SelectField('Kategoria', coerce=int)
-    submit = SubmitField('Zapisz')
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content')
+    category_id = SelectField('Category', coerce=int)
+    submit = SubmitField('Save')
 
 
 class CategoryForm(FlaskForm):
     """
-    Formularz kategorii.
+    Category form.
     
     Attributes:
-        name: Pole nazwy kategorii.
-        color: Pole koloru kategorii.
-        submit: Przycisk zatwierdzający.
+        name: Name field.
+        color: Color field.
+        submit: Submit button.
     """
-    name = StringField('Nazwa', validators=[DataRequired()])
-    color = StringField('Kolor', validators=[DataRequired()])
-    submit = SubmitField('Zapisz')
+    name = StringField('Name', validators=[DataRequired()])
+    color = StringField('Color', validators=[DataRequired()])
+    submit = SubmitField('Save')

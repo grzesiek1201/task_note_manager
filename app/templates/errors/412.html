@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}412 - Warunek wstępny nie został spełniony{% endblock %}
+{% block title %}412 - Precondition Failed{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 text-center">
         <h1 class="display-1">412</h1>
-        <h2>Warunek wstępny nie został spełniony</h2>
-        <p class="lead">Przepraszamy, ale warunek wstępny nie został spełniony.</p>
-        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Powrót do strony głównej</a>
+        <h2>Precondition failed</h2>
+        <p class="lead">Sorry, a precondition for this page was not met.</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to home</a>
     </div>
 </div>
 {% endblock %} 

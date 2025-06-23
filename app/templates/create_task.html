@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Nowe zadanie{% endblock %}
+{% block title %}New task{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h4 class="mb-0">Nowe zadanie</h4>
+                <h4 class="mb-0">New task</h4>
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('tasks.create_task') }}">
@@ -35,14 +35,14 @@
                     </div>
                     <div class="mb-3">
                         {{ form.priority.label(class="form-label") }}
-                        {{ form.priority(class="form-select") }}
+                        {{ form.priority(class="form-control") }}
                         {% for error in form.priority.errors %}
                         <span class="text-danger">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div class="mb-3">
                         {{ form.category_id.label(class="form-label") }}
-                        {{ form.category_id(class="form-select") }}
+                        {{ form.category_id(class="form-control") }}
                         {% for error in form.category_id.errors %}
                         <span class="text-danger">{{ error }}</span>
                         {% endfor %}

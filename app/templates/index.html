@@ -18,37 +18,25 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Ostatnie zadania</h4>
+                <h4 class="mb-0">Recent tasks</h4>
                 <a href="{{ url_for('tasks.create_task') }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus"></i>
                 </a>
             </div>
             <div class="card-body">
-                {% if recent_tasks %}
+                {% if tasks %}
                 <div class="list-group">
-                    {% for task in recent_tasks %}
-                    <div class="list-group-item task-item" style="background-color: {% if task.priority == 'high' %}#ffebee{% elif task.priority == 'medium' %}#fff3e0{% else %}#e8f5e9{% endif %} !important; border-left: 4px solid {% if task.priority == 'high' %}#f44336{% elif task.priority == 'medium' %}#ff9800{% else %}#4caf50{% endif %} !important;">
+                    {% for task in tasks %}
+                    <div class="list-group-item task-item" style="background-color: {% if loop.index is even %}#ffecb3{% else %}#fff8e1{% endif %} !important; border-left: 4px solid #ff9800 !important;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h5 class="mb-1">
-                                    {{ task.title }}
-                                    <span class="badge {% if task.priority == 'high' %}bg-danger{% elif task.priority == 'medium' %}bg-warning{% else %}bg-success{% endif %}">
-                                        {% if task.priority == 'high' %}
-                                            Wysoki
-                                        {% elif task.priority == 'medium' %}
-                                            Średni
-                                        {% else %}
-                                            Niski
-                                        {% endif %}
-                                    </span>
-                                </h5>
-                                <p class="mb-1">{{ task.description }}</p>
+                                <h5 class="mb-1">{{ task.title }}</h5>
                                 <small class="text-muted">
-                                    Termin: {{ task.due_date.strftime('%d.%m.%Y %H:%M') if task.due_date else 'Brak' }} |
-                                    Kategoria: {{ task.category.name if task.category else 'Brak' }}
+                                    Priority: {{ task.priority|capitalize }} |
+                                    Deadline: {{ task.due_date.strftime('%d.%m.%Y %H:%M') if task.due_date else 'None' }}
                                 </small>
                             </div>
                             <div>
@@ -61,7 +49,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-muted">Brak zadań.</p>
+                <p class="text-muted">No tasks.</p>
                 {% endif %}
             </div>
         </div>
@@ -70,22 +58,21 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Ostatnie notatki</h4>
+                <h4 class="mb-0">Recent notes</h4>
                 <a href="{{ url_for('notes.create_note') }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus"></i>
                 </a>
             </div>
             <div class="card-body">
-                {% if recent_notes %}
+                {% if notes %}
                 <div class="list-group">
-                    {% for note in recent_notes %}
+                    {% for note in notes %}
                     <div class="list-group-item note-item" style="background-color: {% if loop.index is even %}#bbdefb{% else %}#e3f2fd{% endif %} !important; border-left: 4px solid #2196f3 !important;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h5 class="mb-1">{{ note.title }}</h5>
-                                <p class="mb-1">{{ note.content }}</p>
                                 <small class="text-muted">
-                                    Kategoria: {{ note.category.name if note.category else 'Brak' }}
+                                    Category: {{ note.category.name if note.category else 'None' }}
                                 </small>
                             </div>
                             <div>
@@ -98,7 +85,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-muted">Brak notatek.</p>
+                <p class="text-muted">No notes.</p>
                 {% endif %}
             </div>
         </div>
@@ -107,7 +94,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Kategorie</h4>
+                <h4 class="mb-0">Categories</h4>
                 <a href="{{ url_for('categories.create_category') }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus"></i>
                 </a>
@@ -121,8 +108,8 @@
                             <div>
                                 <h5 class="mb-1">{{ category.name }}</h5>
                                 <small class="text-muted">
-                                    Zadania: {{ category.tasks.count() }} |
-                                    Notatki: {{ category.notes.count() }}
+                                    Tasks: {{ category.tasks.count() }} |
+                                    Notes: {{ category.notes.count() }}
                                 </small>
                             </div>
                             <div>
@@ -135,7 +122,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-muted">Brak kategorii.</p>
+                <p class="text-muted">No categories.</p>
                 {% endif %}
             </div>
         </div>
@@ -146,20 +133,20 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Statystyki zadań</h5>
+                <h5 class="mb-0">Task statistics</h5>
             </div>
             <div class="card-body">
                 <p class="mb-2">
-                    <strong>Łączna liczba zadań:</strong> {{ task_stats.total }}
+                    <strong>Total tasks:</strong> {{ task_stats.total }}
                 </p>
                 <p class="mb-2">
-                    <strong>Zadania z wysokim priorytetem:</strong> {{ task_stats.high_priority }}
+                    <strong>High priority tasks:</strong> {{ task_stats.high_priority }}
                 </p>
                 <p class="mb-2">
-                    <strong>Zadania ze średnim priorytetem:</strong> {{ task_stats.medium_priority }}
+                    <strong>Medium priority tasks:</strong> {{ task_stats.medium_priority }}
                 </p>
                 <p class="mb-0">
-                    <strong>Zadania z niskim priorytetem:</strong> {{ task_stats.low_priority }}
+                    <strong>Low priority tasks:</strong> {{ task_stats.low_priority }}
                 </p>
             </div>
         </div>
@@ -168,17 +155,17 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Statystyki notatek</h5>
+                <h5 class="mb-0">Note statistics</h5>
             </div>
             <div class="card-body">
                 <p class="mb-2">
-                    <strong>Łączna liczba notatek:</strong> {{ note_stats.total }}
+                    <strong>Total notes:</strong> {{ note_stats.total }}
                 </p>
                 <p class="mb-2">
-                    <strong>Notatki z kategoriami:</strong> {{ note_stats.with_category }}
+                    <strong>Notes with category:</strong> {{ note_stats.with_category }}
                 </p>
                 <p class="mb-0">
-                    <strong>Notatki bez kategorii:</strong> {{ note_stats.without_category }}
+                    <strong>Notes without category:</strong> {{ note_stats.without_category }}
                 </p>
             </div>
         </div>

@@ -9,16 +9,18 @@ from app.notes.forms import NoteForm
 @notes_bp.route('/notes')
 @login_required
 def notes():
+    """Display the list of user's notes."""
     notes = Note.query.filter_by(user_id=current_user.id).all()
     categories = Category.query.filter_by(user_id=current_user.id).all()
     form = NoteForm()
     form.category_id.choices = [(c.id, c.name) for c in categories]
-    return render_template('notes.html', title='Notatki', notes=notes, form=form, categories=categories)
+    return render_template('notes.html', title='Notes', notes=notes, form=form, categories=categories)
 
 
 @notes_bp.route('/notes/create', methods=['GET', 'POST'])
 @login_required
 def create_note():
+    """Create a new note."""
     form = NoteForm()
     categories = Category.query.filter_by(user_id=current_user.id).all()
     form.category_id.choices = [(c.id, c.name) for c in categories]
@@ -32,10 +34,10 @@ def create_note():
         )
         db.session.add(note)
         db.session.commit()
-        flash('Notatka została utworzona!', 'success')
+        flash('Note has been created!', 'success')
         return redirect(url_for('notes.notes'))
     
-    return render_template('create_note.html', title='Nowa notatka', form=form)
+    return render_template('create_note.html', title='New note', form=form)
 
 
 @notes_bp.route('/notes/<int:id>/edit', methods=['GET', 'POST'])

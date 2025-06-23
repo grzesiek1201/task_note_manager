@@ -9,16 +9,18 @@ from app.tasks.forms import TaskForm
 @tasks_bp.route('/tasks')
 @login_required
 def tasks():
+    """Display the list of user's tasks."""
     tasks = Task.query.filter_by(user_id=current_user.id).all()
     categories = Category.query.filter_by(user_id=current_user.id).all()
     form = TaskForm()
     form.category_id.choices = [(c.id, c.name) for c in categories]
-    return render_template('tasks.html', title='Zadania', tasks=tasks, form=form, categories=categories)
+    return render_template('tasks.html', title='Tasks', tasks=tasks, form=form, categories=categories)
 
 
 @tasks_bp.route('/tasks/create', methods=['GET', 'POST'])
 @login_required
 def create_task():
+    """Create a new task."""
     form = TaskForm()
     categories = Category.query.filter_by(user_id=current_user.id).all()
     form.category_id.choices = [(c.id, c.name) for c in categories]
@@ -34,18 +36,19 @@ def create_task():
         )
         db.session.add(task)
         db.session.commit()
-        flash('Zadanie zostało utworzone!', 'success')
+        flash('Task has been created!', 'success')
         return redirect(url_for('tasks.tasks'))
     
-    return render_template('create_task.html', title='Nowe zadanie', form=form)
+    return render_template('create_task.html', title='New task', form=form)
 
 
 @tasks_bp.route('/tasks/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_task(id):
+    """Edit an existing task."""
     task = Task.query.get_or_404(id)
     if task.user_id != current_user.id:
-        flash('Nie masz uprawnień do edycji tego zadania.', 'danger')
+        flash('You do not have permission to edit this task.', 'danger')
         return redirect(url_for('tasks.tasks'))
     
     form = TaskForm()
@@ -59,7 +62,7 @@ def edit_task(id):
         task.priority = form.priority.data
         task.category_id = form.category_id.data if form.category_id.data else None
         db.session.commit()
-        flash('Zadanie zostało zaktualizowane!', 'success')
+        flash('Task has been updated!', 'success')
         return redirect(url_for('tasks.tasks'))
     
     elif request.method == 'GET':
@@ -69,7 +72,7 @@ def edit_task(id):
         form.priority.data = task.priority
         form.category_id.data = task.category_id
     
-    return render_template('edit_task.html', title='Edycja zadania', form=form, task=task)
+    return render_template('edit_task.html', title='Edit task', form=form, task=task)
 
 
 @tasks_bp.route('/tasks/<int:id>/delete', methods=['POST'])
@@ -89,12 +92,13 @@ def delete_task(id):
 @tasks_bp.route('/tasks/<int:id>/toggle', methods=['POST'])
 @login_required
 def toggle_task(id):
+    """Toggle the completion status of a task."""
     task = Task.query.get_or_404(id)
     if task.user_id != current_user.id:
-        flash('Nie masz uprawnień do zmiany statusu tego zadania.', 'danger')
+        flash('You do not have permission to change the status of this task.', 'danger')
         return redirect(url_for('tasks.tasks'))
     
     task.completed = not task.completed
     db.session.commit()
-    flash('Status zadania został zaktualizowany!', 'success')
+    flash('Task status has been updated!', 'success')
     return redirect(url_for('tasks.tasks'))

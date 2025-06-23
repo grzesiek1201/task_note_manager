@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}401 - Wymagane logowanie{% endblock %}
+{% block title %}401 - Unauthorized{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 text-center">
         <h1 class="display-1">401</h1>
-        <h2>Wymagane logowanie</h2>
-        <p class="lead">Przepraszamy, ale musisz się zalogować, aby uzyskać dostęp do tej strony.</p>
-        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Zaloguj się</a>
+        <h2>Unauthorized</h2>
+        <p class="lead">Sorry, you are not authorized to view this page.</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to home</a>
     </div>
 </div>
 {% endblock %} 

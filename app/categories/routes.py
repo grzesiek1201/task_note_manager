@@ -9,25 +9,15 @@ from app.categories.forms import CategoryForm
 @categories_bp.route('/')
 @login_required
 def index():
-    """
-    Wyświetla listę kategorii użytkownika.
-    
-    Returns:
-        render_template: Szablon z listą kategorii.
-    """
+    """Display the list of user's categories."""
     categories = Category.query.filter_by(user_id=current_user.id).all()
-    return render_template('categories/index.html', title='Kategorie', categories=categories)
+    return render_template('categories/index.html', title='Categories', categories=categories)
 
 
 @categories_bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
-    """
-    Tworzy nową kategorię.
-    
-    Returns:
-        redirect: Przekierowanie do listy kategorii po utworzeniu lub do formularza w przypadku błędu.
-    """
+    """Create a new category."""
     form = CategoryForm()
     if form.validate_on_submit():
         category = Category(
@@ -37,35 +27,27 @@ def create():
         )
         db.session.add(category)
         db.session.commit()
-        flash('Kategoria została utworzona!')
+        flash('Category has been created!', 'success')
         return redirect(url_for('categories.index'))
-    return render_template('categories/create.html', title='Nowa kategoria', form=form)
+    return render_template('categories/create.html', title='New category', form=form)
 
 
 @categories_bp.route('/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(id):
-    """
-    Edytuje istniejącą kategorię.
-    
-    Args:
-        id: ID kategorii do edycji.
-    
-    Returns:
-        redirect: Przekierowanie do listy kategorii po edycji lub do formularza w przypadku błędu.
-    """
+    """Edit an existing category."""
     category = Category.query.get_or_404(id)
     if category.user_id != current_user.id:
-        flash('Nie masz uprawnień do edycji tej kategorii.')
+        flash('You do not have permission to edit this category.', 'danger')
         return redirect(url_for('categories.index'))
     form = CategoryForm(obj=category)
     if form.validate_on_submit():
         category.name = form.name.data
         category.color = form.color.data
         db.session.commit()
-        flash('Kategoria została zaktualizowana!')
+        flash('Category has been updated!', 'success')
         return redirect(url_for('categories.index'))
-    return render_template('categories/edit.html', title='Edytuj kategorię', form=form, category=category)
+    return render_template('categories/edit.html', title='Edit category', form=form, category=category)
 
 
 @categories_bp.route('/<int:id>/delete', methods=['POST'])

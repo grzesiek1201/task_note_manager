@@ -10,48 +10,32 @@ from app.models import User
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    """
-    Obsługuje logowanie użytkownika.
-    
-    Returns:
-        redirect: Przekierowanie do strony głównej po zalogowaniu lub do strony logowania w przypadku błędu.
-    """
+    """Handle user login."""
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Nieprawidłowa nazwa użytkownika lub hasło', 'error')
-            return redirect(url_for('auth.login'))
-        login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or urlparse(next_page).netloc != '':
-            next_page = url_for('main.index')
-        return redirect(next_page)
-    return render_template('auth/login.html', title='Logowanie', form=form)
+            flash('Invalid username or password', 'danger')
+            return render_template('auth/login.html', title='Login', form=form)
+        login_user(user, remember=form.remember.data)
+        flash('Welcome!', 'success')
+        return redirect(url_for('main.index'))
+    return render_template('auth/login.html', title='Login', form=form)
 
 
 @auth_bp.route('/logout')
 def logout():
-    """
-    Wylogowuje użytkownika.
-    
-    Returns:
-        redirect: Przekierowanie do strony głównej.
-    """
+    """Log out the current user."""
     logout_user()
-    return redirect(url_for('main.index'))
+    flash('You have been logged out', 'info')
+    return redirect(url_for('auth.login'))
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    """
-    Obsługuje rejestrację nowego użytkownika.
-    
-    Returns:
-        redirect: Przekierowanie do strony logowania po rejestracji lub do strony rejestracji w przypadku błędu.
-    """
+    """Handle new user registration."""
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = RegisterForm()
@@ -60,6 +44,6 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Gratulacje, rejestracja zakończona sukcesem!', 'success')
+        flash('Congratulations, registration was successful!', 'success')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', title='Rejestracja', form=form) 
+    return render_template('auth/register.html', title='Registration', form=form) 

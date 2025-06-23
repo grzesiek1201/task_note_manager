@@ -148,35 +148,35 @@ def test_delete_task_not_found(client, user, auth_headers):
 
 
 def test_tasks_page(auth_client):
-    """Test wyświetlania strony zadań."""
+    """Test displaying the tasks page."""
     response = auth_client.get('/tasks')
     assert response.status_code == 200
-    assert b'Zadania' in response.data
+    assert 'Tasks' in response.data.decode('utf-8')
 
 
 def test_create_task_page(auth_client):
-    """Test wyświetlania strony tworzenia zadania."""
+    """Test displaying the create task page."""
     response = auth_client.get('/tasks/create')
     assert response.status_code == 200
-    assert b'Nowe zadanie' in response.data
+    assert 'New task' in response.data.decode('utf-8')
 
 
 def test_create_task(auth_client, app, test_user, test_categories):
-    """Test tworzenia nowego zadania."""
+    """Test creating a new task."""
     response = auth_client.post('/tasks/create', data={
-        'title': 'Nowe zadanie',
-        'description': 'Opis nowego zadania',
+        'title': 'New task',
+        'description': 'New task description',
         'due_date': (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M'),
         'priority': 'high',
         'category_id': test_categories[0].id
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Zadanie zostało utworzone' in response.data
+    assert 'Task has been created' in response.data.decode('utf-8')
 
     with app.app_context():
-        task = Task.query.filter_by(title='Nowe zadanie').first()
+        task = Task.query.filter_by(title='New task').first()
         assert task is not None
-        assert task.description == 'Opis nowego zadania'
+        assert task.description == 'New task description'
         assert task.priority == 'high'
         assert task.category_id == test_categories[0].id
 
@@ -189,21 +189,21 @@ def test_edit_task_page(auth_client, test_tasks):
 
 
 def test_edit_task(auth_client, app, test_tasks, test_categories):
-    """Test edycji zadania."""
+    """Test editing a task."""
     response = auth_client.post(f'/tasks/{test_tasks[0].id}/edit', data={
-        'title': 'Zaktualizowane zadanie',
-        'description': 'Zaktualizowany opis',
+        'title': 'Updated task',
+        'description': 'Updated description',
         'due_date': (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%dT%H:%M'),
         'priority': 'medium',
         'category_id': test_categories[1].id
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Zadanie zostało zaktualizowane' in response.data
+    assert 'Task has been updated' in response.data.decode('utf-8')
 
     with app.app_context():
         task = Task.query.get(test_tasks[0].id)
-        assert task.title == 'Zaktualizowane zadanie'
-        assert task.description == 'Zaktualizowany opis'
+        assert task.title == 'Updated task'
+        assert task.description == 'Updated description'
         assert task.priority == 'medium'
         assert task.category_id == test_categories[1].id
 
@@ -230,15 +230,15 @@ def test_toggle_task(auth_client, app, test_tasks):
 
 
 def test_task_validation(auth_client, test_categories):
-    """Test walidacji danych zadania."""
+    """Test task data validation."""
     response = auth_client.post('/tasks/create', data={
-        'title': '',  # Puste pole
-        'description': 'Opis',
+        'title': '',  # Empty field
+        'description': 'Description',
         'due_date': (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M'),
         'priority': 'high',
         'category_id': test_categories[0].id
     })
-    assert b'To pole jest wymagane' in response.data
+    assert 'This field is required' in response.data.decode('utf-8')
 
 
 def test_task_access_control(auth_client, app, test_user):
