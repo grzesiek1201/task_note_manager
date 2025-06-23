@@ -6,7 +6,7 @@ def test_notes_page(auth_client):
     """Test displaying the notes page."""
     response = auth_client.get('/notes')
     assert response.status_code == 200
-    assert b'Notatki' in response.data
+    assert 'Notes' in response.data.decode('utf-8')
 
 def test_create_note_page(auth_client):
     """Test displaying the create note page."""
@@ -34,7 +34,7 @@ def test_edit_note_page(auth_client, test_notes):
     """Test displaying the edit note page."""
     response = auth_client.get(f'/notes/{test_notes[0].id}/edit')
     assert response.status_code == 200
-    assert b'Edycja notatki' in response.data
+    assert 'Edit note' in response.data.decode('utf-8')
 
 def test_edit_note(auth_client, app, test_notes, test_categories):
     """Test editing a note."""
@@ -65,11 +65,11 @@ def test_delete_note(auth_client, app, test_notes):
 def test_note_validation(auth_client, test_categories):
     """Test note data validation."""
     response = auth_client.post('/notes/create', data={
-        'title': '',  # Puste pole
-        'content': 'Treść',
+        'title': '',  # Empty field
+        'content': 'Content',
         'category_id': test_categories[0].id
     })
-    assert b'To pole jest wymagane' in response.data
+    assert 'This field is required.' in response.data.decode('utf-8')
 
 def test_note_access_control(auth_client, app, test_user):
     """Test note access control."""
@@ -79,17 +79,15 @@ def test_note_access_control(auth_client, app, test_user):
     db.session.commit()
 
     note = Note(
-        title='Cudza notatka',
-        content='Treść',
+        title='Other user note',
+        content='Content',
         user=other_user
     )
     db.session.add(note)
     db.session.commit()
 
-
     response = auth_client.get(f'/notes/{note.id}/edit')
     assert response.status_code == 404
-
 
     response = auth_client.post(f'/notes/{note.id}/delete')
     assert response.status_code == 404
@@ -97,14 +95,14 @@ def test_note_access_control(auth_client, app, test_user):
 def test_note_without_category(auth_client, app, test_user):
     """Test creating a note without a category."""
     response = auth_client.post('/notes/create', data={
-        'title': 'Notatka bez kategorii',
-        'content': 'Treść',
+        'title': 'Note without category',
+        'content': 'Content',
         'category_id': ''
     }, follow_redirects=True)
     assert response.status_code == 200
-    assert b'Notatka została utworzona' in response.data
+    assert 'Note has been created!' in response.data.decode('utf-8')
 
     with app.app_context():
-        note = Note.query.filter_by(title='Notatka bez kategorii').first()
+        note = Note.query.filter_by(title='Note without category').first()
         assert note is not None
         assert note.category_id is None 
