@@ -52,8 +52,7 @@ pytest --cov=app --cov-report=term-missing
 
 ## Demo
 
-[![Watch the demo](https://img.youtube.com/vi/<VIDEO_ID>/0.jpg)](https://www.youtube.com/watch?v=https://youtu.be/_5y79kmB27M)
-
+[![Watch the demo](https://img.youtube.com/vi/5y79kmB27M/0.jpg)](https://www.youtube.com/watch?v=_5y79kmB27M)
 
 
 ## License
