@@ -1,13 +1,14 @@
 import pytest
-from app import create_app, db
-from app.models import User, Task, Note, Category
+from task_note_manager.app import create_app, db
+from task_note_manager.app.models.models import User, Task, Note, Category
+from task_note_manager.config import Config
 from datetime import datetime, timedelta
 
 @pytest.fixture
 def app():
     """Tworzy instancję aplikacji do testów."""
-    app = create_app('testing')
-    
+    app = create_app(Config)
+    app.config['WTF_CSRF_ENABLED'] = False  # Wyłącz CSRF w testach
     with app.app_context():
         db.create_all()
         yield app
@@ -36,10 +37,11 @@ def test_user(app):
 @pytest.fixture
 def auth_client(client, test_user):
     """Tworzy zalogowanego klienta testowego."""
-    client.post('/login', data={
+    login_data = {
         'username': 'testuser',
         'password': 'testpassword'
-    })
+    }
+    client.post('/login', data=login_data, follow_redirects=True)
     return client
 
 @pytest.fixture
