@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}410 - Zasób został usunięty{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h1 class="display-1">410</h1>
+        <h2>Zasób został usunięty</h2>
+        <p class="lead">Przepraszamy, ale zasób którego szukasz został usunięty.</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Powrót do strony głównej</a>
+    </div>
+</div>
+{% endblock %} 

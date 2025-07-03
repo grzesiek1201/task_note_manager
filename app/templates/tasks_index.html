@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Zadania</h2>
+<ul>
+    {% for task in tasks %}
+    <li>{{ task.title }}</li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('tasks.create') }}">Dodaj zadanie</a>
+{% endblock %} 
