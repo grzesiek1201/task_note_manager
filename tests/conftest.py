@@ -1,7 +1,7 @@
 import pytest
 from task_note_manager.app import create_app, db
 from task_note_manager.app.models.models import User, Task, Note, Category
-from task_note_manager.config import Config
+from config import Config
 from datetime import datetime, timedelta
 
 @pytest.fixture
