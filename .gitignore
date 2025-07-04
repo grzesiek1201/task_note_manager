@@ -1,9 +1,19 @@
-# Python
+# ========================
+# Python cache / build
+# ========================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+*.pyc
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+.installed.cfg
+
+# Build system artifacts
 build/
 develop-eggs/
 dist/
@@ -16,32 +26,54 @@ parts/
 sdist/
 var/
 wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# Virtual Environment
+# ========================
+# Virtual Environments
+# ========================
+.venv/
 venv/
-../.venv/
 ENV/
+env/
+../.venv/
 
-# IDE
-task_note_manager/.idea/
+# ========================
+# IDE / Editor config
+# ========================
+.idea/
 .vscode/
 *.swp
 *.swo
 
+# ========================
 # Flask
+# ========================
 instance/
 .webassets-cache
 
-# Database
+# ========================
+# Database files
+# ========================
 *.db
 *.sqlite
 
+# ========================
 # Environment variables
+# ========================
 .env
 .env.*
 
+# ========================
 # Logs
-*.log 
+# ========================
+*.log
+
+# ========================
+# OS-specific
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# Optional (for development only)
+# ========================
+migrations/
