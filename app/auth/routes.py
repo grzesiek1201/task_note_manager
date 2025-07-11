@@ -2,11 +2,11 @@ from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from urllib.parse import urlparse
-from task_note_manager.app import db
-from task_note_manager.app.auth import auth_bp
-from task_note_manager.app.auth.forms import LoginForm, RegisterForm
-from task_note_manager.app.models.models import User
-from task_note_manager.app.init_data import init_default_categories
+from app import db
+from app.auth import auth_bp
+from app.auth.forms import LoginForm, RegisterForm
+from app.models.models import User
+from app.init_data import init_default_categories
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])

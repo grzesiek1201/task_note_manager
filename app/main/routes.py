@@ -1,7 +1,7 @@
 from flask import render_template
 from flask_login import login_required, current_user
-from task_note_manager.app.models.models import Task, Note, Category
-from task_note_manager.app.main import main_bp
+from app.models.models import Task, Note, Category
+from app.main import main_bp
 
 
 @main_bp.route('/')

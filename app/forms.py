@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, DateTimeField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
-from task_note_manager.app.models import User, Task, Note, Category
+from app.models import User, Task, Note, Category
 
 
 class LoginForm(FlaskForm):

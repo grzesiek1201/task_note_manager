@@ -16,14 +16,8 @@ Relationships:
 
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from task_note_manager.app.extensions import db
-from flask_login import UserMixin, login_user, LoginManager
-
-login = LoginManager()
-
-@login.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+from app.extensions import db
+from flask_login import UserMixin
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"

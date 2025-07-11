@@ -1,5 +1,5 @@
 from flask import render_template
-from task_note_manager.app.errors import bp
+from app.errors import bp
 
 
 @bp.app_errorhandler(404)

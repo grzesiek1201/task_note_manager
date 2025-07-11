@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request, abort
 from flask_login import login_required, current_user
-from task_note_manager.app import db
-from task_note_manager.app.models.models import Task, Category
-from task_note_manager.app.tasks import tasks_bp
-from task_note_manager.app.tasks.forms import TaskForm
+from app import db
+from app.models.models import Task, Category
+from app.tasks import tasks_bp
+from app.tasks.forms import TaskForm
 
 
 @tasks_bp.route('/tasks')

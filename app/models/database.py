@@ -7,8 +7,8 @@ Only use for development or testing purposes.
 """
 
 from flask import Flask
-from task_note_manager.app.extensions import db
-from task_note_manager.app.models.models import User  # fixed import to absolute path
+from app.extensions import db
+from app.models.models import User  # fixed import to absolute path
 
 
 def create_app(config_object=None) -> Flask:

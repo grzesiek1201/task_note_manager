@@ -1,11 +1,11 @@
-from task_note_manager.app import create_app, db
-from task_note_manager.app.models.models import User, Task, Note, Category
+from app import create_app, db
 
 app = create_app()
 
 
 @app.shell_context_processor
 def make_shell_context():
+    from app.models.models import User, Task, Note, Category
     return {'db': db, 'User': User, 'Task': Task, 'Note': Note, 'Category': Category}
 
 
