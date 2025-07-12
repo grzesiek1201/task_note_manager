@@ -8,7 +8,8 @@ load_dotenv(os.path.join(basedir, '.flaskenv'))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost:5432/task_note_manager'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PERMANENT_SESSION_LIFETIME = timedelta(days=1)
     SESSION_COOKIE_SECURE = True
@@ -18,9 +19,9 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SESSION_COOKIE_SECURE = False  # Wyłączamy w trybie deweloperskim
+    SESSION_COOKIE_SECURE = False
 
 
 class ProductionConfig(Config):
     DEBUG = False
-    # W produkcji wymagamy ustawienia DATABASE_URL w zmiennych środowiskowych
+

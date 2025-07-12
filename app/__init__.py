@@ -2,9 +2,6 @@ from flask import Flask
 from config import Config
 from .extensions import db, migrate, login
 
-login.login_view = 'auth.login'
-login.login_message = 'Please log in to access this page.'
-
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -19,12 +16,14 @@ def create_app(config_class=Config):
     from .tasks import tasks_bp
     from .notes import notes_bp
     from .categories import categories_bp
+    from .errors import bp as errors_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(tasks_bp)
     app.register_blueprint(notes_bp)
     app.register_blueprint(categories_bp)
+    app.register_blueprint(errors_bp)
 
     # Wymuszam import modeli, aby były widoczne dla SQLAlchemy
     from . import models

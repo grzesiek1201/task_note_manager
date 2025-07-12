@@ -8,11 +8,10 @@ from app.main import main_bp
 @main_bp.route('/index')
 @login_required
 def index():
-    """
-    Wyświetla stronę główną z listą zadań, notatek i kategorii użytkownika.
+    """Display the main dashboard with user's tasks, notes, and categories.
     
     Returns:
-        render_template: Szablon strony głównej.
+        render_template: Main dashboard template with user statistics.
     """
     recent_tasks = Task.query.filter_by(user_id=current_user.id).order_by(Task.created_at.desc()).limit(5).all()
     recent_notes = Note.query.filter_by(user_id=current_user.id).order_by(Note.created_at.desc()).limit(5).all()

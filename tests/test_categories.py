@@ -1,5 +1,5 @@
 import pytest
-from task_note_manager.app.models.models import Category
+from app.models.models import Category
 
 def test_create_category(auth_client, app):
     response = auth_client.post('/categories/create', data={

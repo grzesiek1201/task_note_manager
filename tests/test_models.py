@@ -1,5 +1,5 @@
 import pytest
-from task_note_manager.app.models.models import User, Task, Note, Category
+from app.models.models import User, Task, Note, Category
 from datetime import datetime
 
 def test_user_password():

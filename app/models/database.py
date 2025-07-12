@@ -23,7 +23,7 @@ def create_app(config_object=None) -> Flask:
     """
     app = Flask(__name__)
     app.config.from_mapping({
-        "SQLALCHEMY_DATABASE_URI": "postgresql://postgres:postgres@localhost:5432/Users",
+        "SQLALCHEMY_DATABASE_URI": "postgresql://postgres.uzktibwarkomgvnlmswf:plemiona1201@aws-0-eu-central-1.pooler.supabase.com:5432/postgres",
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
     })
 

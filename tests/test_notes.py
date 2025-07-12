@@ -1,5 +1,5 @@
 import pytest
-from task_note_manager.app.models.models import Note
+from app.models.models import Note
 
 def test_create_note(auth_client, test_categories, app):
     response = auth_client.post('/notes/create', data={

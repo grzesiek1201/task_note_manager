@@ -4,7 +4,14 @@ from flask_login import current_user
 
 
 def init_default_categories(user_id):
-    """Inicjalizuje domyślne kategorie dla nowego użytkownika."""
+    """Initialize default categories for a new user.
+    
+    Args:
+        user_id: The ID of the user to create categories for.
+        
+    Returns:
+        None
+    """
     default_categories = [
         'Work',
         'Home',

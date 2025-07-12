@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, abort
+from flask import render_template, redirect, url_for, flash, request, abort, jsonify
 from flask_login import login_required, current_user
 from app import db
 from app.models.models import Category
@@ -54,13 +54,13 @@ def edit(id):
 @login_required
 def delete(id):
     """
-    Usuwa kategorię.
+    Deletes category.
     
     Args:
-        id: ID kategorii do usunięcia.
+        id: ID of deleting category.
     
     Returns:
-        jsonify: Odpowiedź JSON z informacją o sukcesie lub błędzie.
+        jsonify: JSON response.
     """
     category = Category.query.get_or_404(id)
     if category.user_id != current_user.id:

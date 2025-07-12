@@ -1,5 +1,8 @@
 """
-app/extensions.py
+Flask extensions and configuration.
+
+This module contains Flask extensions initialization and configuration
+for SQLAlchemy, Flask-Login, and Flask-Migrate.
 """
 
 from flask_sqlalchemy import SQLAlchemy
@@ -22,5 +25,13 @@ PERMANENT_SESSION_LIFETIME = timedelta(days=1)
 
 @login.user_loader
 def load_user(id):
+    """Load user by ID for Flask-Login.
+    
+    Args:
+        id: The user ID to load.
+        
+    Returns:
+        User: The user object if found, None otherwise.
+    """
     from app.models.models import User
     return User.query.get(int(id))

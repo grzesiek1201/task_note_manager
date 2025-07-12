@@ -1,5 +1,5 @@
 import pytest
-from task_note_manager.app.models.models import User
+from app.models.models import User
 from flask import url_for
 
 def test_register(client, app):

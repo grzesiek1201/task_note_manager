@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, DateTimeField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
-from app.models import User, Task, Note, Category
+from app.models.models import User, Task, Note, Category
 
 
 class LoginForm(FlaskForm):
@@ -109,8 +109,10 @@ class CategoryForm(FlaskForm):
     Attributes:
         name: Name field.
         color: Color field.
+        description: Description field.
         submit: Submit button.
     """
     name = StringField('Name', validators=[DataRequired()])
-    color = StringField('Color', validators=[DataRequired()])
+    color = StringField('Color', default='#000000')
+    description = TextAreaField('Description')
     submit = SubmitField('Save')

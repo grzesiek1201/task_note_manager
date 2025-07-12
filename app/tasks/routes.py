@@ -78,6 +78,14 @@ def edit_task(id):
 @tasks_bp.route('/tasks/<int:id>/delete', methods=['POST'])
 @login_required
 def delete_task(id):
+    """Delete an existing task.
+    
+    Args:
+        id: The ID of the task to delete.
+        
+    Returns:
+        Redirect to tasks list page.
+    """
     task = Task.query.get_or_404(id)
     if task.user_id != current_user.id:
         flash('You do not have permission to delete this task.', 'danger')

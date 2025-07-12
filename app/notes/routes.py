@@ -43,6 +43,14 @@ def create_note():
 @notes_bp.route('/notes/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_note(id):
+    """Edit an existing note.
+    
+    Args:
+        id: The ID of the note to edit.
+        
+    Returns:
+        Rendered template for editing the note or redirect to notes list.
+    """
     note = Note.query.get_or_404(id)
     if note.user_id != current_user.id:
         flash('You do not have permission to edit this note.', 'danger')
@@ -71,6 +79,14 @@ def edit_note(id):
 @notes_bp.route('/notes/<int:id>/delete', methods=['POST'])
 @login_required
 def delete_note(id):
+    """Delete an existing note.
+    
+    Args:
+        id: The ID of the note to delete.
+        
+    Returns:
+        Redirect to notes list page.
+    """
     note = Note.query.get_or_404(id)
     if note.user_id != current_user.id:
         flash('You do not have permission to delete this note.', 'danger')

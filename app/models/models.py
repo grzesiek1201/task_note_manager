@@ -101,7 +101,7 @@ class Note(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
-    category = db.relationship("Category")
+    category = db.relationship("Category", overlaps="category_obj,notes")
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -136,7 +136,7 @@ class Task(db.Model):
     completed = db.Column(db.Boolean, default=False)
 
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
-    category = db.relationship("Category")
+    category = db.relationship("Category", overlaps="category_obj,tasks")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     priority = db.Column(db.String(20), default='medium')
 

@@ -1,12 +1,16 @@
 import pytest
-from task_note_manager.app import create_app, db
-from task_note_manager.app.models.models import User, Task, Note, Category
+from app import create_app, db
+from app.models.models import User, Task, Note, Category
 from config import Config
 from datetime import datetime, timedelta
 
 @pytest.fixture
 def app():
-    """Tworzy instancję aplikacji do testów."""
+    """Create a Flask application instance for testing.
+    
+    Returns:
+        Flask: Configured Flask application for testing.
+    """
     app = create_app(Config)
     app.config['WTF_CSRF_ENABLED'] = False  # Wyłącz CSRF w testach
     with app.app_context():
@@ -17,17 +21,38 @@ def app():
 
 @pytest.fixture
 def client(app):
-    """Tworzy klienta testowego."""
+    """Create a test client for the application.
+    
+    Args:
+        app: Flask application instance.
+        
+    Returns:
+        FlaskClient: Test client for making requests.
+    """
     return app.test_client()
 
 @pytest.fixture
 def runner(app):
-    """Tworzy runner CLI do testów."""
+    """Create a CLI runner for testing.
+    
+    Args:
+        app: Flask application instance.
+        
+    Returns:
+        FlaskCliRunner: CLI runner for testing commands.
+    """
     return app.test_cli_runner()
 
 @pytest.fixture
 def test_user(app):
-    """Tworzy użytkownika testowego."""
+    """Create a test user for testing.
+    
+    Args:
+        app: Flask application instance.
+        
+    Returns:
+        User: Test user instance.
+    """
     user = User(username='testuser', email='test@example.com')
     user.set_password('testpassword')
     db.session.add(user)
@@ -36,7 +61,15 @@ def test_user(app):
 
 @pytest.fixture
 def auth_client(client, test_user):
-    """Tworzy zalogowanego klienta testowego."""
+    """Create an authenticated test client.
+    
+    Args:
+        client: Test client instance.
+        test_user: Test user instance.
+        
+    Returns:
+        FlaskClient: Authenticated test client.
+    """
     login_data = {
         'username': 'testuser',
         'password': 'testpassword'
@@ -46,7 +79,15 @@ def auth_client(client, test_user):
 
 @pytest.fixture
 def test_categories(app, test_user):
-    """Creates test categories."""
+    """Create test categories for testing.
+    
+    Args:
+        app: Flask application instance.
+        test_user: Test user instance.
+        
+    Returns:
+        list: List of test category instances.
+    """
     categories = [
         Category(name='Work', color='#FF0000', user=test_user),
         Category(name='Home', color='#00FF00', user=test_user),
@@ -59,7 +100,16 @@ def test_categories(app, test_user):
 
 @pytest.fixture
 def test_tasks(app, test_user, test_categories):
-    """Tworzy zadania testowe."""
+    """Create test tasks for testing.
+    
+    Args:
+        app: Flask application instance.
+        test_user: Test user instance.
+        test_categories: List of test category instances.
+        
+    Returns:
+        list: List of test task instances.
+    """
     tasks = [
         Task(
             title='Zadanie 1',
@@ -93,7 +143,16 @@ def test_tasks(app, test_user, test_categories):
 
 @pytest.fixture
 def test_notes(app, test_user, test_categories):
-    """Tworzy notatki testowe."""
+    """Create test notes for testing.
+    
+    Args:
+        app: Flask application instance.
+        test_user: Test user instance.
+        test_categories: List of test category instances.
+        
+    Returns:
+        list: List of test note instances.
+    """
     notes = [
         Note(
             title='Notatka 1',
