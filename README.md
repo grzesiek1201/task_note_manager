@@ -2,6 +2,13 @@
 
 A web application for managing tasks and notes with categories, priorities, and user authentication.
 
+## 🔗 Live Demo
+
+👉 **Try the app now:**  
+[https://task-note-manager.onrender.com](https://task-note-manager.onrender.com/login?next=%2F)
+
+This app is deployed on **Render** and uses **Supabase PostgreSQL** as the production database.
+
 ## Features
 - User authentication and registration
 - Task management (create, edit, delete, set priority, set deadline, assign category)
@@ -49,6 +56,12 @@ A web application for managing tasks and notes with categories, priorities, and 
 ```sh
 pytest --cov=app --cov-report=term-missing
 ```
+
+## Deployment
+This application is deployed on Render with the backend connected to a Supabase PostgreSQL database.
+Render handles automatic deployments from GitHub.
+Database connection is configured via the DATABASE_URL environment variable.
+All secrets and credentials should be set via Render’s environment settings panel.
 
 ## Demo
 
